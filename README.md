@@ -20,3 +20,4 @@ Knowen issues are:
 - Time of the pulse effect to long
 - Spacing between primary and secondary text in dp or sp
 - Radius of the ripple in dp
+- NullpointerException if no text is set
