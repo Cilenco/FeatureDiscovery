@@ -2,6 +2,8 @@
 
 In May 2016 Google has updated their Material Design specifications and added the [Feature Discovery](https://material.google.com/growth-communications/feature-discovery.html)  element - a new design pattern which is used to introduce new features and instructions to the user. This library provides an easy to use View of the implemented Feature Discovery.
 
+![alt tag](https://github.com/Cilenco/FeatureDiscovery/blob/master/sample.gif)
+
 ## How to use
     DiscoveryView discoveryView = new DiscoveryView.Builder(context, view)
     .setPrimaryText(R.string.header)
