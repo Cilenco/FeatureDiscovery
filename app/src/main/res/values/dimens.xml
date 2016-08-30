@@ -1,0 +1,5 @@
+<resources>
+
+    <dimen name="defaultMargin">16dp</dimen>
+
+</resources>

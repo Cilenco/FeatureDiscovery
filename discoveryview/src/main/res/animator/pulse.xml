@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+        android:interpolator="@android:interpolator/accelerate_quint"
+        android:duration="1000"
+
+        android:valueType="floatType"
+        android:propertyName="pulseRadius"
+
+        android:valueFrom="44dp"
+        android:valueTo="49dp" />
+
+    <set android:ordering="together">
+
+        <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+            android:interpolator="@android:interpolator/linear"
+            android:duration="500"
+
+            android:valueType="floatType"
+            android:propertyName="rippleWidth"
+
+            android:valueFrom="0dp"
+            android:valueTo="35dp" />
+
+        <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+            android:interpolator="@android:interpolator/linear"
+            android:duration="500"
+
+            android:valueType="intType"
+            android:propertyName="rippleAlpha"
+
+            android:valueFrom="128"
+            android:valueTo="0" />
+
+    </set>
+
+    <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+        android:interpolator="@android:interpolator/decelerate_quint"
+        android:duration="750"
+
+        android:valueType="floatType"
+        android:propertyName="pulseRadius"
+
+        android:valueFrom="49dp"
+        android:valueTo="44dp" />
+
+</set>

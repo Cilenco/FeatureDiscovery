@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/bugReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/defaultMargin"
+        android:text="@string/bugReport"
+        android:autoLink="web" />
+
+    <TextView
+        android:id="@+id/usage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/usage"
+        android:layout_marginBottom="@dimen/defaultMargin"
+        android:layout_marginLeft="@dimen/defaultMargin"
+        android:layout_below="@+id/bugReport" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/usageCode"
+        android:padding="@dimen/defaultMargin"
+        android:background="@android:color/darker_gray"
+        android:layout_marginLeft="@dimen/defaultMargin"
+        android:layout_marginRight="@dimen/defaultMargin"
+        android:layout_below="@+id/usage"
+        android:id="@+id/textView" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/add"
+        android:layout_margin="@dimen/defaultMargin"
+        android:onClick="onFabClicked"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

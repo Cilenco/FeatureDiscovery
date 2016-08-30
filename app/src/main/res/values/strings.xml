@@ -1,0 +1,21 @@
+<resources>
+
+    <string name="app_name">FeatureDiscovery</string>
+
+    <string name="info">Info</string>
+    <string name="star">Star</string>
+
+    <string name="bugReport">Please report bugs at <a href="https://www.google.pl/">GitHub</a> and feel free to send pull requests or any other new ideas for this library.</string>
+    <string name="usage">How to use this Library: Download the application source code from GitHub and add the DiscoveryView module as dependency to your project. Then you can create a DiscoveryView like this:</string>
+    <string name="usageCode">new DiscoveryView.Builder(context, view)\n.setPrimaryText(R.string.header)\n.setSecondaryText(R.string.description)\n.setOnClickListener(this)\n.build().show();</string>
+
+    <string name="infoHeader">FeatureDiscovery v1.0</string>
+    <string name="infoDescription">This is a sample application for the FeatureDiscovery Library. Tab the other Views on the screen to explore the scopes of this library.</string>
+
+    <string name="starHeader">View with ColorFilter</string>
+    <string name="starDescription">DiscoveryView with ColorFilter. Notice the color change of the target view.</string>
+
+    <string name="fabHeader">View without ColorFilter</string>
+    <string name="fabDescription">Normal DiscoveryView without ColorFilter. Point out your instructions to the user here.</string>
+
+</resources>

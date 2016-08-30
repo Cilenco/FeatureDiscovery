@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator
+        android:duration="250"
+        android:valueType="floatType"
+        android:propertyName="backgroundRadius" />
+
+    <objectAnimator
+        android:duration="250"
+        android:valueType="floatType"
+        android:propertyName="targetRadius" />
+
+    <objectAnimator
+        android:duration="250"
+
+        android:valueFrom="255"
+        android:valueTo="0"
+
+        android:valueType="intType"
+        android:propertyName="targetAlpha" />
+
+    <objectAnimator
+        android:duration="50"
+
+        android:valueFrom="255"
+        android:valueTo="0"
+
+        android:valueType="intType"
+        android:propertyName="textAlpha" />
+
+</set>
