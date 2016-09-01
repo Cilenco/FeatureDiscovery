@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+ext {
+    bintrayRepo = 'libraries'
+    bintrayName = 'featurediscovery'
+
+    publishedGroupId = 'com.cilenco.libraries'
+    libraryName = 'FeatureDiscovery'
+    artifact = 'featurediscovery'
+
+    libraryDescription = 'This library provides an easy to use implementation of the FeatureDiscovery.'
+
+    siteUrl = 'https://github.com/Cilenco/FeatureDiscovery'
+    gitUrl = 'https://github.com/Cilenco/FeatureDiscovery.git'
+
+    libraryVersion = '1.0.1'
+
+    developerId = 'cilenco'
+    developerName = 'Christian Dielitz'
+    developerEmail = 'dielitzc@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 24
+        versionCode 2
+        versionName "1.0.1"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:24.2.0'
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

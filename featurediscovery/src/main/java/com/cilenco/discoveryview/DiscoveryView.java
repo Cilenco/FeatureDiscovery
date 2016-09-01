@@ -19,7 +19,9 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -143,7 +145,6 @@ public class DiscoveryView extends View {
 
     /**
      * Sets the target and so the center of highlighted area
-     *
      * @param target View target of the DiscoveryView
      */
     public void setTarget(View target) {
@@ -236,10 +237,6 @@ public class DiscoveryView extends View {
             canvas.drawBitmap(targetBitmap, center.x - target.getWidth() / 2, center.y - target.getHeight() / 2, colorPaint);
             if (colorFilter != null) colorPaint.setColorFilter(null);
         }
-
-        // For debug options
-        //colorPaint.setColor(Color.GREEN);
-        //canvas.drawLine(center.x, center.y, textPaddingLrDp, primaryTextY, colorPaint);
     }
 
     @Override
@@ -260,7 +257,6 @@ public class DiscoveryView extends View {
 
     /**
      * Sets the primary text of the DiscoveryView
-     *
      * @param primaryText New text which is displaced as Headline
      */
     public void setPrimaryText(String primaryText) {
@@ -269,7 +265,6 @@ public class DiscoveryView extends View {
 
     /**
      * Returns the current primary text
-     *
      * @return Current primary text
      */
     public String getPrimaryText() {
@@ -278,7 +273,6 @@ public class DiscoveryView extends View {
 
     /**
      * Sets the text size of the primary text (Default 16sp)
-     *
      * @param primaryTextSize The new size of the primary text
      */
     public void setPrimaryTextSize(float primaryTextSize) {
@@ -287,7 +281,16 @@ public class DiscoveryView extends View {
 
     /**
      * Sets the new color of the primary text
-     *
+     * @param colorRes The colorResource which is used as new color
+     */
+    public void setPrimaryTextColorResource(@ColorRes int colorRes)
+    {
+        int color = ContextCompat.getColor(getContext(), colorRes);
+        setPrimaryTextColor(color);
+    }
+
+    /**
+     * Sets the new color of the primary text
      * @param primaryTextColor The new color of the primary text
      */
     public void setPrimaryTextColor(int primaryTextColor) {
@@ -296,7 +299,6 @@ public class DiscoveryView extends View {
 
     /**
      * Sets the secondary text of the DiscoveryView
-     *
      * @param secondaryText New text which is displaced as description
      */
     public void setSecondaryText(String secondaryText) {
@@ -305,7 +307,6 @@ public class DiscoveryView extends View {
 
     /**
      * Returns the current secondary text
-     *
      * @return Current secondary text
      */
     public String getSecondaryText() {
@@ -314,7 +315,6 @@ public class DiscoveryView extends View {
 
     /**
      * Sets the text size of the secondary text (Default 14sp)
-     *
      * @param secondaryTextSize The new size of the secondary text
      */
     public void setSecondaryTextSize(float secondaryTextSize) {
@@ -323,21 +323,39 @@ public class DiscoveryView extends View {
 
     /**
      * Sets the new color of the secondary text
-     *
+     * @param colorRes The colorResource which is used as new color
+     */
+    public void setSecondaryTextColorResource(@ColorRes int colorRes)
+    {
+        int color = ContextCompat.getColor(getContext(), colorRes);
+        setSecondaryTextColor(color);
+    }
+
+    /**
+     * Sets the new color of the secondary text
      * @param secondaryTextColor The new color of the secondary text
      */
     public void setSecondaryTextColor(int secondaryTextColor) {
         this.secondaryTextColor = secondaryTextColor;
     }
 
+    public void setBackgroundColorResource(@ColorRes int colorRes)
+    {
+        int color = ContextCompat.getColor(getContext(), colorRes);
+        setBackgroundColor(color);
+    }
+
     /**
      * Sets the new color of the background and the targetView
-     *
      * @param color The new color of the background
      */
     public void setBackgroundColor(int color) {
         backgroundColor = color;
-        //colorFilter = new LightingColorFilter(0, color); // TODO check if used
+
+        if(colorFilter instanceof LightingColorFilter)
+        {
+            colorFilter = new LightingColorFilter(0, color);
+        }
     }
 
     public void setColorFilter(ColorFilter colorFilter) {
@@ -352,6 +370,10 @@ public class DiscoveryView extends View {
         return (colorFilter != null);
     }
 
+    /**
+     * Displays the DiscoveryView on top of all other views on the screen
+     * @param animated If true the view will flyIn, if false it appears immediately
+     */
     public void show(final boolean animated) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -376,14 +398,25 @@ public class DiscoveryView extends View {
         dialog.show();
     }
 
+    /**
+     * Displays the DiscoveryView with flyIn animation
+     * on top of all other views on the screen
+     */
     public void show() {
         show(true);
     }
 
+    /**
+     * Hides the DiscoveryView with flyOut animation
+     */
     public void dismiss() {
         this.dismiss(true);
     }
 
+    /**
+     * Displays the DiscoveryView on top of all other views on the screen
+     * @param animated If true the view will flyOut, if false it disappears immediately
+     */
     public void dismiss(boolean animated) {
         if (!animated) dialog.dismiss();
         else flyOut();
@@ -605,6 +638,7 @@ public class DiscoveryView extends View {
 
         private int backgroundColor = -1;
         private ColorFilter colorFilter;
+        private boolean defaultFilter;
 
         public Builder(Context context, View target) {
             this.context = context;
@@ -667,7 +701,8 @@ public class DiscoveryView extends View {
         }
 
         public Builder usePrimaryColorAsFilter(boolean choise) {
-            if (choise) colorFilter = new LightingColorFilter(0, 0xFF3F51B5);
+            defaultFilter = choise;
+            //if (choise || colorFilter != null)
             return this;
         }
 
@@ -684,7 +719,17 @@ public class DiscoveryView extends View {
             if (primaryTextColor != -1) v.setPrimaryTextColor(primaryTextColor);
             if (secondaryTextColor != -1) v.setSecondaryTextColor(secondaryTextColor);
             if (backgroundColor != -1) v.setBackgroundColor(backgroundColor);
-            if (colorFilter != null) v.setColorFilter(colorFilter);
+
+            if (defaultFilter)
+            {
+                if(backgroundColor == -1) backgroundColor = v.getThemeColor(R.attr.colorPrimaryDark);
+                ColorFilter colorFilter = new LightingColorFilter(0, backgroundColor);
+                v.setColorFilter(colorFilter);
+            }
+            else if(this.colorFilter != null)
+            {
+                v.setColorFilter(this.colorFilter);
+            }
 
             if (listener != null) v.setOnDiscoveryViewClickListener(listener);
 
