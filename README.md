@@ -7,7 +7,7 @@ In May 2016 Google has updated their Material Design specifications and added th
 ## How to use
 Add the library to your dependencies throught:
 
-    compile 'com.cilenco.libraries:featurediscovery:1.0.0'
+    compile 'com.cilenco.libraries:featurediscovery:1.0.1'
     
 After that your are able to use it like this:
 
