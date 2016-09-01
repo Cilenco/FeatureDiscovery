@@ -5,6 +5,12 @@ In May 2016 Google has updated their Material Design specifications and added th
 ![alt tag](https://github.com/Cilenco/FeatureDiscovery/blob/master/sample.gif)
 
 ## How to use
+Add the library to your dependencies throught:
+
+    compile 'com.cilenco.libraries:featurediscovery:1.0.0'
+    
+After that your are able to use it like this:
+
     DiscoveryView discoveryView = new DiscoveryView.Builder(context, view)
     .setPrimaryText(R.string.header)
     .setSecondaryText(R.string.description)
