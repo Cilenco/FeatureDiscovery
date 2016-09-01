@@ -1,1 +1,1 @@
-include ':app', ':discoveryview'
+include ':app', ':featurediscovery'
