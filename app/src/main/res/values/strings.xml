@@ -12,8 +12,8 @@
     <string name="infoHeader">FeatureDiscovery v1.0</string>
     <string name="infoDescription">This is a sample application for the FeatureDiscovery Library. Tab the other Views on the screen to explore the scopes of this library.</string>
 
-    <string name="starHeader">View with ColorFilter</string>
-    <string name="starDescription">DiscoveryView with ColorFilter. Notice the color change of the target view.</string>
+    <string name="starHeader">View with ColorFilter sans-serif BOLD</string>
+    <string name="starDescription">DiscoveryView with ColorFilter. Notice the color change of the target view. sans-serif BOLD-ITALIC</string>
 
     <string name="fabHeader">View without ColorFilter</string>
     <string name="fabDescription">Normal DiscoveryView without ColorFilter. Point out your instructions to the user here.</string>

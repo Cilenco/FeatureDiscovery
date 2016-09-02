@@ -18,6 +18,7 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
@@ -273,6 +274,14 @@ public class DiscoveryView extends View {
     }
 
     /**
+     * Sets the typeface of the primary text
+     * @param primaryTextTypeface The new typeface for the primary text
+     */
+    public void setPrimaryTextTypeface(Typeface primaryTextTypeface) {
+        primaryTextPaint.setTypeface(primaryTextTypeface);
+    }
+
+    /**
      * Sets the new color of the primary text
      * @param colorRes The colorResource which is used as new color
      */
@@ -312,6 +321,14 @@ public class DiscoveryView extends View {
      */
     public void setSecondaryTextSize(float secondaryTextSize) {
         secondaryTextPaint.setTextSize(secondaryTextSize);
+    }
+
+    /**
+     * Sets the typeface of the secondary text
+     * @param secondaryTextTypeface The new typeface for the secondary text
+     */
+    public void setSecondaryTextTypeface(Typeface secondaryTextTypeface) {
+        secondaryTextPaint.setTypeface(secondaryTextTypeface);
     }
 
     /**
@@ -676,6 +693,9 @@ public class DiscoveryView extends View {
         private int primaryTextSize = -1;
         private int secondaryTextSize = -1;
 
+        private Typeface primaryTextTypeface;
+        private Typeface secondaryTextTypeface;
+
         private int primaryTextColor = -1;
         private int secondaryTextColor = -1;
 
@@ -740,6 +760,16 @@ public class DiscoveryView extends View {
             return this;
         }
 
+        public Builder setPrimaryTextTypeface(Typeface primaryTextTypeface) {
+            this.primaryTextTypeface = primaryTextTypeface;
+            return this;
+        }
+
+        public Builder setSecondaryTextTypeface(Typeface secondaryTextTypeface) {
+            this.secondaryTextTypeface = secondaryTextTypeface;
+            return this;
+        }
+
         public Builder setSecondaryTextColorResource(@ColorRes int colorRes)
         {
             int color = ContextCompat.getColor(target.getContext(), colorRes);
@@ -775,6 +805,8 @@ public class DiscoveryView extends View {
 
             if (primaryTextSize != -1) v.setPrimaryTextSize(primaryTextSize);
             if (secondaryTextSize != -1) v.setSecondaryTextSize(secondaryTextSize);
+            if (primaryTextTypeface != null) v.setPrimaryTextTypeface(primaryTextTypeface);
+            if (secondaryTextTypeface != null) v.setSecondaryTextTypeface(secondaryTextTypeface);
 
             if (primaryTextColor != -1) v.setPrimaryTextColor(primaryTextColor);
             if (secondaryTextColor != -1) v.setSecondaryTextColor(secondaryTextColor);

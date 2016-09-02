@@ -1,5 +1,6 @@
 package com.cilenco.featurediscovery;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements DiscoveryView.OnD
                         .setSecondaryText(R.string.starDescription)
                         .setOnClickListener(this)
                         .usePrimaryColorAsFilter(true)
+                        .setPrimaryTextTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD))
+                        .setSecondaryTextTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD_ITALIC))
                         .build();
 
                 starView.show();
