@@ -20,6 +20,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
@@ -28,6 +29,7 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -38,9 +40,8 @@ import java.util.ArrayList;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-//@SuppressWarnings("unused")
 public class DiscoveryView extends View {
-    private static final int TEXT_PADDING_TOP = 40; // 20
+    private static final int TEXT_PADDING_TOP = 40;
     private static final int TEXT_PADDING_LR = 40;
     private static final int TEXT_DISTANCE = 16;
     private static final int TARGET_RADIUS = 44;
@@ -48,7 +49,8 @@ public class DiscoveryView extends View {
     private static final int PRIMARY_TEXT_SIZE = 18;
     private static final int SECONDARY_TEXT_SIZE = 16;
 
-    private OnDiscoveryViewClickListener listener;
+    private OnDiscoveryViewClickListener listener;  // Holds the listener to react to events on the View
+    private GestureDetector gestureDetector;        // Used to recognize click (in feature maybe other) events
 
     private Dialog dialog;                          // Holds the overlay dialog where the view is displayed
     private View target;                            // Holds the View target to discover
@@ -73,11 +75,8 @@ public class DiscoveryView extends View {
     private float textPaddingLrDp;                  // Holds the text padding left and right
     private float textDistanceDp;                   // Holds the distance between primary and secondaryText
 
-    private float primaryTextSize;                  // Holds the textSize of the primaryText
-    private float secondaryTextSize;                // Holds the textSize of the secondaryText
-
-    private float primaryTextY;
-    private float secondaryTextY;
+    private float primaryTextY;                     // Holds the Y-position of the primaryText
+    private float secondaryTextY;                   // Holds the Y-position of the secondaryText
 
     private float bgRadius;                         // Holds the radius of the background
     private float targetRadiusDp;                   // Holds the target radius in dp
@@ -92,7 +91,6 @@ public class DiscoveryView extends View {
 
     public interface OnDiscoveryViewClickListener {
         void onDiscoveryViewClicked(DiscoveryView discoveryView);
-
         void onDiscoveryViewDismissed(DiscoveryView discoveryView);
     }
 
@@ -112,6 +110,8 @@ public class DiscoveryView extends View {
     }
 
     protected void initialise() {
+        gestureDetector = new GestureDetector(getContext(), new ClickDetector());
+
         Resources resources = getContext().getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
 
@@ -120,8 +120,8 @@ public class DiscoveryView extends View {
         textDistanceDp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TEXT_DISTANCE, metrics);
         targetRadiusDp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TARGET_RADIUS, metrics);
 
-        primaryTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, PRIMARY_TEXT_SIZE, metrics);
-        secondaryTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, SECONDARY_TEXT_SIZE, metrics);
+        float primaryTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, PRIMARY_TEXT_SIZE, metrics);
+        float secondaryTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, SECONDARY_TEXT_SIZE, metrics);
 
         backgroundColor = getThemeColor(R.attr.colorPrimary);
         primaryTextColor = Color.WHITE;
@@ -147,7 +147,7 @@ public class DiscoveryView extends View {
      * Sets the target and so the center of highlighted area
      * @param target View target of the DiscoveryView
      */
-    public void setTarget(View target) {
+    public void setTarget(@NonNull View target) {
         this.target = target;
 
         int pos[] = new int[2];
@@ -168,6 +168,10 @@ public class DiscoveryView extends View {
         target.draw(c);
     }
 
+    /**
+     * Returns the target of the discoveryView
+     * @return The current target
+     */
     public View getTarget() {
         return target;
     }
@@ -241,18 +245,7 @@ public class DiscoveryView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getRawX();
-        int y = (int) event.getRawY();
-
-        Rect touchArea = new Rect();
-        target.getGlobalVisibleRect(touchArea);
-
-        if (touchArea.contains(x, y)) {
-            target.onTouchEvent(event);
-        }
-
-        if (listener != null) listener.onDiscoveryViewClicked(this);
-        return false;
+        return gestureDetector.onTouchEvent(event);
     }
 
     /**
@@ -362,10 +355,18 @@ public class DiscoveryView extends View {
         this.colorFilter = colorFilter;
     }
 
+    /**
+     * Returns the current colorFilter of the view
+     * @return The current colorFilter
+     */
     public ColorFilter getColorFilter() {
         return colorFilter;
     }
 
+    /**
+     * Return if a colorFilter is applied to the view target
+     * @return True if a colorFilter is set, otherwise flase
+     */
     public boolean hasColorFilter() {
         return (colorFilter != null);
     }
@@ -431,25 +432,36 @@ public class DiscoveryView extends View {
         Resources resources = getContext().getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
 
-        if (metrics.heightPixels / 2 < pos[1]) {
-            if (metrics.widthPixels / 2 < pos[0]) {
+        if (metrics.heightPixels / 2 < pos[1])
+        {   // Target is on the lower half of the screen
+
+            if (metrics.widthPixels / 2 < pos[0])
+            {   // Target is on the lower right side of the screen
                 secondaryTextY = center.y - targetRadiusDp - textPaddingTopDp - secondaryTextLayout.getHeight(); //primaryTextY + primaryTextLayout.getHeight() + textDistanceDp;
                 primaryTextY = secondaryTextY - textDistanceDp - primaryTextLayout.getHeight();
 
                 bgRadius = (float) sqrt(pow(center.x - textPaddingLrDp, 2) + pow(center.y - primaryTextY - primaryTextLayout.getHeight(), 2));
-            } else { // Target is on the left side of the screen
+            }
+            else
+            {   // Target is on the lower left side of the screen
                 secondaryTextY = center.y - targetRadiusDp - textPaddingTopDp - secondaryTextLayout.getHeight(); //primaryTextY + primaryTextLayout.getHeight() + textDistanceDp;
                 primaryTextY = secondaryTextY - textDistanceDp - primaryTextLayout.getHeight();
 
                 bgRadius = (float) sqrt(pow(center.x - (textPaddingLrDp + primaryTextLayout.getWidth()), 2) + pow(center.y - primaryTextY - primaryTextLayout.getHeight(), 2));
             }
-        } else { // Target is on the upper half of the screen
-            if (metrics.widthPixels / 2 < pos[0]) {
+        }
+        else
+        {   // Target is on the upper half of the screen
+
+            if (metrics.widthPixels / 2 < pos[0])
+            {   // Target is on the upper right half of the screen
                 primaryTextY = center.y + targetRadiusDp + textPaddingTopDp;
                 secondaryTextY = primaryTextY + primaryTextLayout.getHeight() + textDistanceDp;
 
                 bgRadius = (float) sqrt(pow(center.x - textPaddingLrDp, 2) + pow(center.y - secondaryTextY - secondaryTextLayout.getHeight(), 2));
-            } else { // Target is on the left side of the screen
+            }
+            else
+            {   // Target is on the upper left side of the screen
                 primaryTextY = center.y + targetRadiusDp + textPaddingTopDp;
                 secondaryTextY = primaryTextY + primaryTextLayout.getHeight() + textDistanceDp;
 
@@ -621,6 +633,37 @@ public class DiscoveryView extends View {
         this.invalidate();
     }
 
+    private class ClickDetector extends GestureDetector.SimpleOnGestureListener
+    {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e)
+        {
+            int x = (int) e.getRawX();
+            int y = (int) e.getRawY();
+
+            Rect touchArea = new Rect();
+            target.getGlobalVisibleRect(touchArea);
+
+            if (touchArea.contains(x, y)) {
+                target.performClick();
+            }
+
+            if (listener != null) listener.onDiscoveryViewClicked(DiscoveryView.this);
+            return true;
+        }
+    }
+
+    /**
+     * This class should be used to create a DiscoveryView instead of initialise it
+     * by yourself. It returns a {@link DiscoveryView} which can be modified later but in
+     * a more complicated way then with this Builder class
+     */
+    @SuppressWarnings("unused")
     public static class Builder {
         private Context context;
         private View target;
@@ -670,9 +713,21 @@ public class DiscoveryView extends View {
             return this;
         }
 
+        public Builder setBackgroundColorResource(@ColorRes int colorRes)
+        {
+            int color = ContextCompat.getColor(target.getContext(), colorRes);
+            return setBackgroundColor(color);
+        }
+
         public Builder setBackgroundColor(int backgroundColor) {
             this.backgroundColor = backgroundColor;
             return this;
+        }
+
+        public Builder setPrimaryTextColorResource(@ColorRes int colorRes)
+        {
+            int color = ContextCompat.getColor(target.getContext(), colorRes);
+            return setPrimaryTextColor(color);
         }
 
         public Builder setPrimaryTextColor(int primaryTextColor) {
@@ -683,6 +738,12 @@ public class DiscoveryView extends View {
         public Builder setPrimaryTextSize(int primaryTextSize) {
             this.primaryTextSize = primaryTextSize;
             return this;
+        }
+
+        public Builder setSecondaryTextColorResource(@ColorRes int colorRes)
+        {
+            int color = ContextCompat.getColor(target.getContext(), colorRes);
+            return setSecondaryTextColor(color);
         }
 
         public Builder setSecondaryTextColor(int secondaryTextColor) {
@@ -702,7 +763,6 @@ public class DiscoveryView extends View {
 
         public Builder usePrimaryColorAsFilter(boolean choise) {
             defaultFilter = choise;
-            //if (choise || colorFilter != null)
             return this;
         }
 
