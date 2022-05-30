@@ -406,6 +406,7 @@ public class DiscoveryView extends View {
                     return;
                 }
 
+                textAlpha = 255;
                 targetAlpha = 255;
                 animTargetRadiusDp = targetRadiusDp;
                 DiscoveryView.this.invalidate();
